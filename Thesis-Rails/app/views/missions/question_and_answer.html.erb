@@ -1,0 +1,154 @@
+<script language="javascript" type="text/javascript">
+var mission_id = "<%= @mission.attributes['id'] %>";
+var project_id = "<%= @project.id %>";
+</script>
+
+<%= render 'shared/header' %>
+
+<%= render 'shared/mission_navigation' %>
+<%= render 'shared/editor_control' %>
+
+<%= stylesheet_link_tag 'jquery.ui' %>
+<%= stylesheet_link_tag 'views/question_and_answer' %>
+
+<%= javascript_include_tag "jquery/jquery.ui" %>
+<%= javascript_include_tag "jquery/jquery.jeditable" %>
+<%= javascript_include_tag "commands/command" %>
+<%= javascript_include_tag "commands/common" %>
+<%= javascript_include_tag "commands/question_and_answer" %>
+<%= javascript_include_tag "views/question_and_answer" %>
+
+
+<div class="content">
+
+<h3><%= @mission.attributes["name"] %></h3>
+
+<div class="label title-as-tooltip" title="The number of questions the player has to answer correctly to pass this quiz.">Needed answers</div>
+<div class="edit title-as-tooltip" title="The number of questions the player has to answer correctly to pass this quiz. Click to edit." id="editNeededAnswers"><%= @mission.attributes["correctAnswersNeeded"] %></div>
+<br />
+<br />
+
+Shuffle Questions:
+<input type="checkbox" <%=
+ if @mission.attributes['shuffle'] == "true"
+   "checked"
+ end
+%> id="shuffle"/> <br />
+
+<%
+@introNode = XPath.first(@mission, "./intro")
+@intro = @introNode.text unless @introNode.nil?
+
+@outroSuccessNode = XPath.first(@mission, "./outroSuccess")
+@outroSuccess = @outroSuccessNode.text unless @outroSuccessNode.nil?
+
+@outroFailNode = XPath.first(@mission, "./outroFail")
+@outroFail = @outroFailNode.text unless @outroFailNode.nil?
+
+%>
+
+<table>
+  <tr>
+    <td>Intro</td>
+ <% if @introNode.nil? %>
+    <td id="introPlace">  <input type="button" value="Add Intro" onclick="addIntro()" /> </td>
+    <td id="introButtonPlace"></td>
+ <% else %>
+    <td id="introPlace">
+        <textarea cols="30" rows="3"  id="intro"><%= @intro %></textarea>
+    </td>
+    <td id="introButtonPlace">
+      <input type="button" value="Intro aktualisieren" onclick="updateIntro()"/> <br />
+      <input type="button" value="Intro löschen" onclick="deleteIntro()" />
+    </td>
+ <% end %>
+</tr>
+
+
+  <tr>
+    <td>Outro (Success)</td>
+ <% if @outroSuccessNode.nil? %>
+    <td id="outroSuccessPlace">  <input type="button" value="Add Outro (Success)" onclick="addOutroSuccess()" /> </td>
+    <td id="outroSuccessButtonPlace"></td>
+ <% else %>
+    <td id="outroSuccessPlace">
+        <textarea cols="30" rows="3"  id="outroSuccess"><%= @outroSuccess %></textarea>
+    </td>
+    <td id="outroSuccessButtonPlace">
+      <input type="button" value="Outro (Success) aktualisieren" onclick="updateOutroSuccess()"/><br />
+      <input type="button" value="Outro (Success) löschen" onclick="deleteOutroSuccess()" />
+    </td>
+ <% end %>
+</tr>
+
+
+
+  <tr>
+    <td>Outro (Fail)</td>
+ <% if @outroFailNode.nil? %>
+    <td id="outroFailPlace">  <input type="button" value="Add Outro (Fail)" onclick="addOutroFail()" /> </td>
+    <td id="outroFailButtonPlace"></td>
+ <% else %>
+    <td id="outroFailPlace">
+        <textarea cols="30" rows="3"  id="outroFail"><%= @outroFail %></textarea>
+    </td>
+    <td id="outroFailButtonPlace">
+      <input type="button" value="Outro (Fail) aktualisieren" onclick="updateOutroFail()"/><br />
+      <input type="button" value="Outro (Fail) löschen" onclick="deleteOutroFail()" />
+    </td>
+ <% end %>
+</tr>
+
+
+
+</table>
+
+
+<div id="accordion">
+<% @questions.each do |question| %>
+<h3><a href="#"><%= XPath.first(question, "./questiontext").text %></a></h3>
+<div>
+
+  Question: <div class="editable-question"><%= XPath.first(question, "./questiontext").text %></div> <br />
+  <input type="button" onclick="deleteQuestion()" value="Delete question" />
+  <br />
+
+  <table class="answerTable">
+  <tr><td>Answer</td><td>Text if choosen</td><td>Correct</td></tr>
+<% XPath.each(question, "./answer") do |answer| %>
+  <tr>
+    <td class="answerCell">
+      <div class="editable-answer"> <%= answer.text %></div>
+    </td>
+    <td class="answerCell">
+      <div class="editable-onchoose"> <%= answer.attributes['onChoose'] %></div>
+    </td>
+    <td class="answerCell">
+      <input type="checkbox" class="checkbox-correct" <%= "checked" if answer.attributes['correct'] == "1" %>  />
+    </td>
+    <td>
+      <input type="image" src="/images/delete.png" value="Delete" onclick="deleteAnswer(this)" />
+    </td>
+  </tr>
+<% end %>
+</table>
+<p>New Answer:
+<input class="newAnswerTextfield"></input></p>
+<p>Text, if this answer is choosen:
+<input type="text" class="newOnChooseTextfield"></input></p>
+<p>Is the answer correct? <input type="checkbox" id="newCorrectCheckbox" /></p>
+<br />
+
+<input type="button" value="Add answer" onclick="addAnswer()" />
+</div>
+
+<% end %>
+</div>
+
+
+<hr />
+New question: <br />
+<input type="text" id="newQuestionText"></input>
+
+<input type="button" value="Add question" onclick="addQuestion()"/>
+</div>

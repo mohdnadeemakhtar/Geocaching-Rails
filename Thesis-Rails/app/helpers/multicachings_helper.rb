@@ -1,0 +1,2 @@
+module MulticachingsHelper
+end

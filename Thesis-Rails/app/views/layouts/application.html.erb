@@ -1,0 +1,25 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title>GeoquestEditor</title>
+  
+  <%= javascript_include_tag "jquery/jquery.js" %>
+  <%= javascript_include_tag "rails.js" %>
+  <%= csrf_meta_tag %>
+  <%= stylesheet_link_tag 'editor' %>
+  
+  <%= stylesheet_link_tag 'gmaps4rails'%>
+  <%= yield :head %>
+</head>
+<body>
+<%= flash[:alert] %>
+ 
+<%= javascript_include_tag 'jquery/jquery'  %>
+<%= javascript_include_tag 'jquery/jquery.qtip'  %>
+<%= javascript_include_tag 'shared/application'  %>
+
+
+<%= yield %>
+<%= yield :scripts %>
+</body>
+</html>

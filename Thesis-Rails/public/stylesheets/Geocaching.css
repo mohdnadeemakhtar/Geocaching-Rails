@@ -1,0 +1,38 @@
+/* 
+    Document   : Geocaching
+    Created on : Mar 9, 2012, 5:18:49 PM
+    Author     : nadeem
+    Description:
+        Purpose of the stylesheet follows.
+*/
+
+/* 
+   TODO customize this sample style
+   Syntax recommendation http://www.w3.org/TR/REC-CSS2/
+*/
+
+root { 
+    display: block;
+}
+
+
+body{
+
+    background-color: #317733;
+    font: normal 12px "Lucida Grande";
+    margin: 0px auto;
+    padding: 0px;
+    line-height: 160%;
+}
+
+.slidingDiv {
+    height:100px;
+    background-color: #41A317;
+    padding:10px;
+    
+    border-bottom:2px solid #FFA500;
+}
+
+.show_hide {
+    display:none;
+}

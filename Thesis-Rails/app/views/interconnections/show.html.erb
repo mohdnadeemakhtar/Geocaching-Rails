@@ -1,0 +1,89 @@
+<%= render 'shared/header' %>
+
+<%= render 'shared/mission_navigation' %>
+<%= render 'shared/editor_control' %>
+
+<%= stylesheet_link_tag 'jquery.ui' %>
+<%= stylesheet_link_tag 'jquery.contextMenu' %>
+<%= stylesheet_link_tag 'jqueryFileTree' %>
+<%= stylesheet_link_tag 'views/mission_interconnections' %>
+
+<script>
+  var project_id = <%= @project.id %>;
+</script>
+
+
+<%= javascript_include_tag 'jquery/jquery.ui' %>
+<%= javascript_include_tag 'other/excanvas' %>
+<%= javascript_include_tag 'jquery/jquery.jsPlumb'  %>
+<%= javascript_include_tag 'jquery/jquery.contextMenu'  %>
+<%= javascript_include_tag 'jquery/jquery.selectBoxes' %>
+<%= javascript_include_tag "jquery/jquery.fileTree"  %>
+<%= javascript_include_tag 'commands/command'  %>
+<%= javascript_include_tag 'commands/mission_logic'  %>
+<%= javascript_include_tag 'shared/lexer.js'  %>
+<%= javascript_include_tag 'shared/parser.js'  %>
+<%= javascript_include_tag 'views/event_dialog' %>
+<%= javascript_include_tag 'views/mission_logic'  %>
+
+
+<ul class="initially-hidden" id="missionMenu">
+  <li>
+    <a href="#listRules">List all rules</a>
+  </li>
+  <li>
+    <a href="#addOnStart">new onStart rule</a>
+  </li>
+  <li>
+    <a href="#addOnEnd">new onEnd rule</a>
+  </li>
+</ul>
+
+<ul class="initially-hidden" id="hotspotMenu">
+  <li>
+    <a href="#listRules">List all rules</a>
+  </li>
+  <li>
+    <a href="#addOnEnter">new onEnter rule</a>
+  </li>
+  <li>
+    <a href="#addOnLeave">new onLeave rule</a>
+  </li>
+  <li>
+    <a href="#addOnTap">new onTap rule</a>
+  </li>
+</ul>
+
+<div class="initially-hidden" id="ruleDialog_dialog">
+  <div id="ruleDialog_rule"></div>
+  <br />
+  <input type="button" id="ruleDialog_createButton" value="create rule" />
+
+</div>
+
+<div class="initially-hidden" id="editRuleDialog_dialog">
+  <div id="editRuleDialog_rule"></div>
+  <br />
+  <input type="button" id="editRuleDialog_updateButton" value="update rule" />
+  <input type="button" id="editRuleDialog_deleteButton" value="delete rule" />
+</div>
+
+<div class="initially-hidden" id="listRulesDialog_dialog">
+  <div id="listRulesDialog_rulesTree"></div>
+  <div id="listRulesDialog_rulesContainer">
+    <div id="listRulesDialog_rule"></div>
+    <br />
+    <input type="button" id="listRulesDialog_updateButton" value="update rule" />
+    <input type="button" id="listRulesDialog_deleteButton" value="delete rule" />
+  </div>
+</div>
+
+<%= render 'event_dialog' %>
+
+<div class="content">
+<h3>Mission interconnection</h3>
+
+
+
+
+</div>

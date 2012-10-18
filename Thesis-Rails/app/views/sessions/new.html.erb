@@ -1,0 +1,30 @@
+<%= stylesheet_link_tag 'login.css' %>
+
+  <h1 id="login-caption">
+    GeoQuest Editor
+  </h1>
+
+
+<div class="login-field">
+
+
+<h4>Login</h4>
+
+<p class="notice"><%= notice  %></p>
+
+<%= form_tag session_path do %>
+  <div class="field">
+    <%= label_tag :email %><br />
+    <%= text_field_tag :email %>
+  </div>
+  <div class="field">
+    <%= label_tag :password %><br />
+    <%= password_field_tag :password %>
+  </div>
+  <div class="actions">
+    <%= submit_tag 'Login' %>
+  </div>
+  <br />
+  <%= link_to "Register", register_path, :class => "editor_link" %> <br />
+<% end %>
+</div>

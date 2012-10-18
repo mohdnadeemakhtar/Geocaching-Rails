@@ -1,0 +1,25 @@
+<p id="notice"><%= notice %></p>
+
+<p>
+  <b>Address:</b>
+  <%= @geocaching.address %>
+</p>
+
+<p>
+  <b>Longitude:</b>
+  <%= @geocaching.longitude %>
+</p>
+
+<p>
+  <b>Latitude:</b>
+  <%= @geocaching.latitude %>
+</p>
+
+<p>
+  <b>Gmaps:</b>
+  <%= @geocaching.gmaps %>
+</p>
+
+
+<%= link_to 'Edit', edit_geocaching_path(@geocaching) %> |
+<%= link_to 'Back', geocachings_path %>

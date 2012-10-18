@@ -1,0 +1,29 @@
+/* 
+    Document   : Geocaching
+    Created on : Mar 9, 2012, 5:18:49 PM
+    Author     : nadeem
+    Description:
+        Purpose of the stylesheet follows.
+*/
+
+/* 
+   TODO customize this sample style
+   Syntax recommendation http://www.w3.org/TR/REC-CSS2/
+*/
+
+root { 
+    display: block;
+}
+
+
+body{
+   font: normal 11px "Lucida Grande", Helvetica, Arial, sans-serif;
+	background: url("/images/bg.jpg");
+	margin: 0px auto;
+	padding: 0px;
+	color: #eee;
+	text-align: center;
+	line-height: 160%;
+}
+
+#plain_wrapper 	{width: 450px; margin: 0px auto; padding: 0px; background: black url("/images/top_hearts_black.png") no-repeat; border: 10px solid #666;}

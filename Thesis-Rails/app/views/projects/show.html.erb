@@ -1,0 +1,27 @@
+<script>
+  var project_id = "<%= @project.id %>";
+</script>
+
+
+<%= render 'shared/header' %>
+
+<%= render 'shared/mission_navigation' %>
+<%= render 'shared/editor_control' %>
+
+<%= javascript_include_tag 'commands/command.js'  %>
+<%= javascript_include_tag 'commands/project.js'  %>
+<%= javascript_include_tag 'jquery/jquery.jeditable'  %>
+<%= javascript_include_tag 'views/project'  %>
+
+
+
+<div class="content">
+
+  <div class="label">Name: </div>
+  <div id="editName" class="edit title-as-tooltip" title="Name of the project.\nClick to edit."><%= @project.name %></div> <br />
+
+<p id="messageField"></p>
+
+<input type="button" class="title-as-tooltip" title="Deploys the game into the repository." value="Deploy into repository" onclick="deployGame()" />
+
+</div>

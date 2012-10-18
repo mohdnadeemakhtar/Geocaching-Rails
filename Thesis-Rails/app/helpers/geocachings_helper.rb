@@ -1,0 +1,2 @@
+module GeocachingsHelper
+end

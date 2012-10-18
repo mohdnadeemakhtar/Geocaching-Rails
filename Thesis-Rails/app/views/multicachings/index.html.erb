@@ -1,0 +1,398 @@
+<%= javascript_include_tag 'shared/application'%>
+
+<%= javascript_include_tag "http://maps.google.com/maps/api/js?sensor=false" %>
+<%= javascript_include_tag "http://ajax.googleapis.com/ajax/libs/jquery/1.5.1/jquery.min.js" %>
+<%= javascript_include_tag "http://code.jquery.com/jquery-1.7.1.min.js" %>
+<%= javascript_include_tag "views/map_overview"  %>
+<%= javascript_include_tag 'jquery/jquery.ui' %>
+<%= stylesheet_link_tag 'jquery.ui'  %>
+<%= stylesheet_link_tag 'jquery.contextMenu'  %>
+<%= stylesheet_link_tag 'Geocaching'%>
+<%= javascript_include_tag 'jquery/jquery.ui' %>
+<%= javascript_include_tag 'jquery/jquery.contextMenu' %>
+<%= javascript_include_tag 'jquery/jquery-ui-1.8.1.custom.min'  %>
+
+<%= javascript_include_tag "http://ajax.googleapis.com/ajax/libs/jqueryui/1.8.11/jquery-ui.min.js" %>
+<%= javascript_include_tag 'movingBox/jquery.easing.1.3.js' %>
+<%= javascript_include_tag 'movingBox/jquery.mousewheel.js' %>
+<%= javascript_include_tag 'movingBox/jquery.jscrollpane.min.js' %>
+<%= javascript_include_tag 'movingBox/jquery.transform-0.9.3.min_.js' %>
+<%= javascript_include_tag 'movingBox/custom-form-elements.js' %>
+<%= stylesheet_link_tag 'movingBox/jquery.jscrollpane.css'%>
+<%= stylesheet_link_tag 'movingBox/style.css'%>
+<%= stylesheet_link_tag 'movingBox/form.css'%>
+<%= stylesheet_link_tag 'movingBox/button.css'%>
+<link href="http://ajax.googleapis.com/ajax/libs/jqueryui/1.8/themes/le-frog/jquery-ui.css" rel="stylesheet" type="text/css" />
+<meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1" />
+<meta name="description" content="Moving Boxes Menu with jQuery" />
+<meta name="keywords" content="jquery, boxes, menu, rotating, content, background image, full page" />
+
+<link href='http://fonts.googleapis.com/css?family=PT+Sans+Narrow' rel='stylesheet' type='text/css' />
+<link href='http://fonts.googleapis.com/css?family=Astloch:regular,bold' rel='stylesheet' type='text/css' />
+<link type="text/css" href="movingBox/jquery.jscrollpane.css"	rel="stylesheet" media="all" />
+
+
+
+       
+       
+<h1 class="Multicaching_Header"><big>Multicachings</big></h1>
+    
+
+<div class="accordian">
+<div id="accordion" >
+       <% @multicachings.each do |multicaching| %>
+
+	<h3><a href="#"> Multicaching : <%= multicaching.name %></a></h3>
+        <div>
+          <table>
+            <tr >
+              <td align="left" style="width: 100px;">
+                <p>
+                 <%= link_to 'Show', multicaching, :style=>"color:#0000A0;" %>
+                </p>
+              </td>
+
+              <td align="centre" style="width: 100px;">
+                <p>
+                 <%= link_to 'Edit', edit_multicaching_path(multicaching), :style=>"color:#FFA500;"  %>
+                </p>
+              </td>
+              
+              <td align="right" style="width: 100px;">
+                <p>
+                <%= link_to 'Destroy',multicaching,:confirm =>  'Are you sure?', :method => :delete , :style=>"color:#800000;"%>
+                </p>
+              </td>
+            </tr>
+
+          </table>
+	</div>
+        <% end %>
+
+
+  </div>
+</div>
+
+	
+
+<div id="mb_menu" class="mb_menu">
+
+  <a href="#" class="Multicaching_button round" data-speed="1000" data-easing="easeInExpo">New Multicaching</a>
+</div>
+
+<div class="map_container">
+
+  <div id="map_container"  style="width: 100%; height: 400px;"></div>
+
+</div>
+<div id="mb_pattern" class="mb_pattern"></div>
+
+<br />
+<ul id="mapMenu" class="contextMenu">
+  <li>
+    <a href="#StartingPoint">Starting Point</a>
+  </li>
+</ul>
+
+<div id="mb_content_wrapper" class="mb_content_wrapper">
+
+  <span class="mb_close" id="mb_close"></span>
+
+  <div class="mb_content">
+    <h2>Multicaching</h2>
+    <div class="mb_content_inner">
+      <%= form_for(@multicaching) do |f| %>
+        <% if @multicaching.errors.any? %>
+          <div id="error_explanation">
+            <h2><%= pluralize(@multicaching.errors.count, "error") %> prohibited this multicaching from being saved:</h2>
+
+            <ul>
+              <% @multicaching.errors.full_messages.each do |msg| %>
+                <li><%= msg %></li>
+              <% end %>
+            </ul>
+          </div>
+        <% end %>
+
+        <div class="field">
+          <%= f.label :name %><br />
+          <%= f.text_field :name %>
+        </div>
+        <div class="actions">
+          <%= f.submit %>
+        </div>
+      <% end %>
+    </div>
+  </div>
+</div>
+
+
+<script language="javascript">
+
+  var overlay = new google.maps.OverlayView();
+  overlay.draw = function() {};
+function initializeMap() {
+    // Address of the university building at the "Römerstraße" in Bonn
+    var latlng = new google.maps.LatLng(50.75315770034479, 7.092959254504436);
+    var myOptions = {
+        zoom: 17,
+        center: latlng,
+        mapTypeId: google.maps.MapTypeId.SATELLITE
+
+    };
+    map = new google.maps.Map(document.getElementById("map_container"), myOptions);
+    overlay.setMap(map);
+}
+function initializeMapContextMenu() {
+    $("#map_container").contextMenu({
+        menu: 'mapMenu'
+    },
+    function(action, el, pos) {
+        if (action == "StartingPoint") createHotspot(pos);
+    });
+}
+function createHotspot(pos) {
+    point = new google.maps.Point(pos.x, pos.y);
+    latlng = overlay.getProjection().fromContainerPixelToLatLng(point);
+    var lat =latlng.lat();
+    var lng = latlng.lng();
+     var myLatlng = new google.maps.LatLng(lat,lng);
+
+    var marker = new google.maps.Marker({
+        position: myLatlng,
+        map: map,
+
+        draggable: true
+    });
+}
+
+
+
+function deleteMapContextMenu() {
+    $("#map_container").destroyContextMenu();
+}
+
+$(document).ready(function() {
+    initializeMap();
+    deleteMapContextMenu();
+    initializeMapContextMenu();
+
+    $(function() {
+      $( "#accordion" ).accordion({
+        event: "mouseover",
+        autoHeight: false,
+        navigation: true
+      });
+    });
+
+});
+</script>
+
+<script type="text/javascript">
+		$(function() {
+			var $menu = $('#mb_menu'), $menuItems = $menu.children('a'), $mbWrapper = $('#mb_content_wrapper'), $mbClose = $mbWrapper
+					.children('.mb_close'), $mbContentItems = $mbWrapper
+					.children('.mb_content'), $mbContentInnerItems = $mbContentItems
+					.children('.mb_content_inner');
+					$mbPattern = $('#mb_pattern'),
+					$works = $('#mb_imagelist > li'),
+					$mb_bgimage = $('#mb_background > img'),
+
+					Menu = (function() {
+
+						var init = function() {
+							preloadImages();
+							initPlugins();
+							initPattern();
+							initEventsHandler();
+						},
+						//preloads the images for the work area (data-bgimg attr)
+						preloadImages = function() {
+							$works.each(function(i) {
+								$('<img/>').attr('src',
+										$(this).children('img').data('bgimg'));
+							});
+						},
+						//initialise the jScollPane (scroll plugin)
+						initPlugins = function() {
+							$mbContentInnerItems.jScrollPane({
+								verticalDragMinHeight : 40,
+								verticalDragMaxHeight : 40
+							});
+						},
+						/*
+							draws 16 boxes on a specific area of the page.
+							we randomly calculate the top, left, and rotation angle for each one of them
+						 */
+						initPattern = function() {
+							for ( var i = 0; i < 10; ++i) {
+								//random opacity, top, left and angle
+								var o = 0.1, t = Math
+										.floor(Math.random() * 196) + 5, // between 5 and 200
+								l = Math.floor(Math.random() * 696) + 5, // between 5 and 700
+								a = Math.floor(Math.random() * 101) - 50; // between -50 and 50
+
+								$el = $('<div>').css({
+									opacity : o,
+									top : t + 'px',
+									left : l + 'px'
+
+								});
+
+								if (!$.browser.msie)
+									$el.transform({
+										'rotate' : a + 'deg'
+									});
+
+								$el.appendTo($mbPattern);
+							}
+							$mbPattern.children().draggable(); //just for fun
+						},
+						/*
+							when the User closes a content item, we move the boxes back to the original place,
+							with new random values for top, left and angle though
+						 */
+						disperse = function() {
+							$mbPattern
+									.children()
+									.each(
+											function(i) {
+												//random opacity, top, left and angle
+												var o = 0.1, t = Math
+														.floor(Math.random() * 196) + 5, // between 5 and 200
+												l = Math
+														.floor(Math.random() * 696) + 5, // between 5 and 700
+												a = Math
+														.floor(Math.random() * 101) - 50; // between -50 and 50
+												$el = $(this), param = {
+													width : '50px',
+													height : '50px',
+													opacity : o,
+													top : t + 'px',
+
+													left : l + 'px'
+												};
+
+												if (!$.browser.msie)
+													param.rotate = a + 'deg';
+
+												$el.animate(param, 1000,
+														'easeOutExpo');
+											});
+						}, initEventsHandler = function() {
+							/*
+								click a link in the menu
+							 */
+							$menuItems
+									.bind(
+											'click',
+											function(e) {
+												var $this = $(this), pos = $this
+														.index(), speed = $this
+														.data('speed'), easing = $this
+														.data('easing');
+												//if an item is not yet shown
+												if (!$menu.data('open')) {
+													//if current animating return
+													if ($menu.data('moving'))
+														return false;
+													$menu.data('moving', true);
+													$
+															.when(
+																	openItem(
+																			pos,
+																			speed,
+																			easing))
+															.done(
+																	function() {
+																		$menu
+																				.data({
+																					open : true,
+																					moving : false
+																				});
+																		showContentItem(pos);
+																		$mbPattern
+																				.children()
+																				.fadeOut(
+																						500);
+																	});
+												} else
+													showContentItem(pos);
+												return false;
+											});
+
+							/*
+								click close makes the boxes animate to the top of the page
+							 */
+							$mbClose.bind('click', function(e) {
+								$menu.data('open', false);
+								/*
+									if we would want to show the default image when we close:
+									changeBGImage('images/default.jpg');
+								 */
+								$mbPattern.children().fadeIn(500, function() {
+									$mbContentItems.hide();
+									$mbWrapper.hide();
+								});
+
+								disperse();
+								return false;
+							});
+
+						},
+
+						/*
+							This shows a content item when there is already one shown:
+						 */
+						showContentItem = function(pos) {
+							$mbContentItems.hide();
+							$mbWrapper.show();
+							$mbContentItems.eq(pos).show().children(
+									'.mb_content_inner').jScrollPane();
+						},
+						/*
+							moves the boxes from the top to the center of the page,
+							and shows the respective content item
+						 */
+						openItem = function(pos, speed, easing) {
+							return $
+									.Deferred(
+											function(dfd) {
+												$mbPattern
+														.children()
+														.each(
+																function(i) {
+																	var $el = $(this), param = {
+																		width : '100px',
+																		height : '100px',
+																		top : 154 + 100 * Math
+																				.floor(i / 4),
+																		left : 200 + 100 * (i % 4),
+																		opacity : 1
+																	};
+
+																	if (!$.browser.msie)
+																		param.rotate = '0deg';
+
+																	$el
+																			.animate(
+																					param,
+																					speed,
+																					easing,
+																					dfd.resolve);
+																});
+											}).promise();
+						};
+
+						return {
+							init : init
+						};
+
+					})();
+
+			/*
+				call the init method of Menu
+			 */
+			Menu.init();
+		});
+	</script>

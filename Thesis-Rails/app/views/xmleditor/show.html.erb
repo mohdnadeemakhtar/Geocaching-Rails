@@ -1,0 +1,42 @@
+<%= render 'shared/header' %>
+
+<%= render 'shared/mission_navigation' %>
+<%= render 'shared/editor_control' %>
+
+<script>
+  var project_id = <%= @project.id %>;
+</script>
+
+
+<%= javascript_include_tag 'codemirror2/codemirror'  %>
+<%= javascript_include_tag 'codemirror2/xml'  %>
+<%= javascript_include_tag 'commands/command' %>
+<%= javascript_include_tag 'commands/xmlfile' %>
+<%= javascript_include_tag 'views/xml_editor'  %>
+
+<%= stylesheet_link_tag 'codemirror'  %>
+<%= stylesheet_link_tag 'codemirror.xml' %>
+
+
+
+<div class="content">
+<h3>game.xml</h3>
+
+
+<textarea cols="80" rows="100" id="xmleditor">
+<%=
+formatter = REXML::Formatters::Pretty.new
+output = String.new
+formatter.write(@xmlfile, output)
+
+output
+%>
+</textarea>
+
+<br />
+
+<p id="messageField" style="position: absolute; top : 510pt;"></p>
+
+<input type="button" style="position: absolute; top : 540pt;" value="Update Xml File" onclick="updateXmlFile()" />
+
+</div>

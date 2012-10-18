@@ -1,0 +1,93 @@
+<div class="header">
+  <h1 id="caption">
+    Project overview
+  </h1>
+</div>
+
+
+<%= render 'shared/mission_navigation' %>
+<%= render 'shared/editor_control' %>
+
+<%= javascript_include_tag 'jquery/jquery.contextMenu'  %>
+<%= stylesheet_link_tag 'jquery.contextMenu'  %>
+<%= stylesheet_link_tag 'views/project' %>
+
+<ul id="projectMenu" class="contextMenu">
+  <li>
+    <a href="#open">Open</a>
+  </li>
+  <li>
+    <a href="#delete">Delete</a>
+  </li>
+</ul>
+
+<script type="text/javascript">
+
+  function openProject(id) {
+    document.location = "/projects/" + id;
+  }
+
+  function deleteProject(id, name) {
+    var really = confirm("Really delete Project '" + name + "'?\nThis action cannot be reversed.");
+    if(!really) return;
+
+    // Delete project:
+    $.ajax({
+      url : "/projects/" + id + "/delete",
+      type : "POST",
+      data : {
+        "project_id" : id
+      },
+      success : function() {
+        $("li#" + id).remove();
+      },
+      error : function() {
+        alert("Error during deleting");
+      }
+    })
+
+  }
+
+  $(document).ready(function() {
+
+    $(".projectEntry").contextMenu({
+      menu: 'projectMenu'
+    },
+    function(action, el, pos) {
+      if (action == "open") openProject($(el).attr('id'));
+      if (action == "delete") deleteProject($(el).attr('id'), $(el).attr('name'));
+    });
+
+
+  });
+</script>
+
+<div class="content">
+  <%= notice %>
+
+
+
+  <ul id="project_list">
+    <% unless @last_modified.nil? %>
+    <li class="title-as-tooltip projectEntry"
+        title="The last modified project"
+        id="<%= @last_modified.id %>"
+        name="<%= @last_modified.name %>" >
+        <%= link_to @last_modified.name, @last_modified, :class => 'editor_link last_modified_link' %>
+    </li>
+    <% end %>
+
+    <% @projects.each do |project| %>
+      <%
+      unless @last_modified.nil?
+        next if @last_modified.id == project.id
+      end
+      %>
+      <li class="projectEntry" id="<%= project.id %>" name="<%= project.name %>"> <%= link_to project.name, project, :class => 'editor_link' %> </li>
+    <% end  %>
+
+  </ul>
+
+
+
+</div>

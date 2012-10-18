@@ -1,0 +1,41 @@
+<%= form_for(@geocaching) do |f| %>
+  <%= f.hidden_field :multicaching_id, :value=>@multicaching_current%>
+  <% if @geocaching.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(@geocaching.errors.count, "error") %> prohibited this geocaching from being saved:</h2>
+
+      <ul>
+      <% @geocaching.errors.full_messages.each do |msg| %>
+        <li><%= msg %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+<div class="field">
+    <%= f.label :name %><br />
+    <%= f.text_field :name %>
+  </div>
+  <div class="field">
+    <%= f.label :address %><br />
+    <%= f.text_field :address %>
+  </div>
+  <div class="field">
+    <%= f.label :longitude %><br />
+    <%= f.text_field :longitude %>
+  </div>
+  <div class="field">
+    <%= f.label :latitude %><br />
+    <%= f.text_field :latitude %>
+  </div>
+<div class="field">
+    <%= f.label :summary %><br />
+    <%= f.text_field :summary %>
+  </div>
+  <div class="field">
+    <%= f.label :gmaps %><br />
+    <%= f.check_box :gmaps %>
+  </div>
+  <div class="actions">
+    <%= f.submit %>
+  </div>
+<% end %>
